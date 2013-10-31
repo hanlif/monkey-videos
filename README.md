@@ -94,5 +94,9 @@ tudou
 也可以用了, 有些视频会直接重定向到youku.com, 使用youku的视频解析算法.
 
 
-其它
-===
+
+COPYRIGHT
+=========
+`Copyright (C) 2013 LiuLang <gsushzhsosgsu@gmail.com>`
+
+依照GNU General Public License v3协议发布, 协议内容请参看LICENSE文件.
