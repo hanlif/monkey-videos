@@ -1,0 +1,26 @@
+
+http://182.118.125.24:8080/0/Dota-20110624-__D0__A1__C2__FA__B5__DA__D2__BB__CA__D3__BD__C7__B1__A9__D7__DF__C1__FA__C6__EF__CA__BF__B3__AC__BF__ECFarm.mp4?key=d88f729efaeb389b53146d3734787d43&vvid=
+
+http://c1.pptv.com/puid/get?format=xml
+dc3ee8f638287927574cd88f60634441
+
+http://web-play.pptv.com/webplay3-75528-12120659.xml&ft=0&zone=8&vvid=&type=web&rnd=0.2798669463954866
+
+edaea7b3ba85f6af7baf0bf7037e727b-4561-1338731046
+
+http://182.118.125.24:8080/0/Dota-20110624-__D0__A1__C2__FA__B5__DA__D2__BB__CA__D3__BD__C7__B1__A9__D7__DF__C1__FA__C6__EF__CA__BF__B3__AC__BF__ECFarm.mp4?key=7996958661bc0b65aaba68a1e93bb63a&vvid=
+
+
+"o%3D0%26pageUrl%3Dhttp%253A%252F%252Fv.pptv.com%252Fshow%252FqdXKSLAWhsQnpQ0.html%26duration%3D7080%26sids%3D971383_100017565_954200_100017115%26bkid%3D44155%26lm%3Dtrue"
+
+-static9.pplive.cn
+-pplive.cn
+-s1.pplive.cn
++pptv.com
+!hm.baidu.com
+!scorecardresearch.com
+
+st_go({'blog':'4779443','v':'wpcom','user_id':'0','subd':'hackadaycom'});
+function st_vt() {var x=document.createElement("img");x.src="http://stats.wordpress.com/g.gif?blog=4779443&v=wpcomvt&user_id=0&subd=hackadaycom&rand="+Math.random();}
+ex_go({'crypt':'UE40eW5QN0p8M2Y/RE1BNmNJfGhxNCVxUDExYmtXRThKbHcwXTdETWI1alhvb1oseHImN101ZFpEakVpYjlQYVFLYzBaVHRtPz0wXS9bVlFpZ3c1Qn4wUGZdcDE2PzNYN05ydHExTjVNMHZDQyw9RmRkPSxnX1NMPVlDUFVUaDVIXyYyYj14WV9iM1tPR0g0XVJnLERDUHkxYW9zfjlmaTBDQXZZWVZiaT9uemd5JmpsQi8uLmN+P0R+Ri9LTUp+bm4vLFBlTzhBX1RRT1dhckRaOV1HLXZjN3N0VENyaD8vLmdXSg=='});
+addLoadEvent(function(){linktracker_init('4779443',0);});

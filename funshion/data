@@ -1,0 +1,18 @@
+获取专辑信息:
+http://api.funshion.com/ajax/get_web_fsp/40113/mp4
+
+http://58.215.93.78/play/5A644B13C2D4929302467F39FB4E3003673F6A1D.mp4
+http://60.210.9.133/play/10ACB11A37C65696085D5CB90199699CEE87876D.mp4
+
+获取本集信息:
+http://api.funshion.com/ajax/get_webplayinfo/40113/6/mp4
+
+高清:
+http://jobsfe.funshion.com/query/v1/mp4/0c9afef753f35d3db53e19e3537fba22.json
+标清:
+http://jobsfe.funshion.com/query/v1/mp4/0c9afef753f35d3db53e19e3537fba22.json?bits=327680
+
+
+############# UGC videos ################
+http://api.funshion.com/ajax/get_media_data/ugc/346265
+http://jobsfe.funshion.com/query/v1/mp4/598B0BBCA4938E372001E944B831FFF207E5AED0.json?file=38e229bc42aad092e3120d948df77e5a47b162d0.mp4

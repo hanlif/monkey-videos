@@ -1,0 +1,28 @@
+
+
+清晰度:
+<data version="1">66cabe8cd58046e9b017f3b9df632833</data> 高清
+<data version="2">3256ffc44fa049cda33506c8525f5970</data> 极速
+<data version="96">dcab9626ef664cb192eebb246ad414dc</data> 流畅
+</relative>
+
+第一次会话, 生成一个time stamp(服务器上也有一个相同的time stamp, 估计还会与客户端的IP相关联; 因此在flvcd.com才不能下载iqiyi.com的视频;)并记录当前的UTC, 如果请求下一段视频, 取得请求时的UTC, 然后减去初使时的UTC 再加上time stamp, 就得到了当前请求视频的time stamp(临时, 有一个时间窗口, 估计是为了处理网络延时)
+
+
+这个是专辑的请求页面:
+http://rec.inter.qiyi.com/resys?albumId=147519&domain=wwwt&aid=147519
+
+http://data.video.qiyi.com/3238769136/videos/documentary/20111229/62a610efaba75bdf946b61a2f7324801.f4v?retry=0&e=-1&z=wuhan3_cnc&su=33c4275e30f9b3778a38abef6a3ba3a7&s=0&client=182.112.233.118&bt=1&ct=1&mi=3_147519_155441_66cabe8cd58046e9b017f3b9df632833
+.
+
+向服务器登记 time stamp:
+http://data.video.qiyi.com/t.hml?
+
+3238768901
+
+秒:
+1333879135
+http://data.video.qiyi.com/t.hml?
+tn=0.2719268319196999
+
+3238769136
