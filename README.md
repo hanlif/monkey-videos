@@ -101,6 +101,10 @@ acfun
 =====
 acfun.tv, 由@只是说 推荐的网站.
 
+bilibili
+========
+bilibili.tv, 这个网站不存储视频, 只使用其它视频网站的资源.
+
 
 COPYRIGHT
 =========
