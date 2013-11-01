@@ -93,6 +93,10 @@ tudou
 =====
 也可以用了, 有些视频会直接重定向到youku.com, 使用youku的视频解析算法.
 
+vimeo
+=====
+vimeo.com, 里面有一些非常有趣的视频.
+
 
 
 COPYRIGHT
