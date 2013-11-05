@@ -148,7 +148,7 @@ var pptv = {
     for (i = 0; i < this.sgm; i += 1) {
       a = document.createElement('a');
       div.appendChild(a);
-      a.innerHTML = String(i) + ') ' + this.title.substr(0,15);
+      a.innerHTML = String(i) + ') ' + this.title;
       a.href = this.playlist[i];
       a.className = 'download-link';
     }
