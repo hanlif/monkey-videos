@@ -1,0 +1,34 @@
+http://ipd.pps.tv/play_38Q858.html
+
+http://dp.ppstream.com/get_play_url_cdn.php?sid=38Q858&flash_type=1
+
+
+http://dp.ppstream.com/get_play_url_cdn.php?sid=37GFKV&flash_type=1
+
+
+http://vurl.ppstv.com/ugc/3/19/389f5dc1c9552c29ec78b9ba559058b6023053b5/389f5dc1c9552c29ec78b9ba559058b6023053b5.pfv?hd=0&all=01&title=不二神探&vtypeid=2&fd=1&ct=5878&bl=香港;澳门;台湾;海外&fb=1&sha=fa85da75e6ced3e5a84fa2b9bae059608d8e164b&fid=RUM7X5QEO2DCMPGJQJIRRT5LTOS6T3B3&bip=http://bip.ppstream.com/R/RU/RUM7X5QEO2DCMPGJQJIRRT5LTOS6T3B3/RUM7X5QEO2DCMPGJQJIRRT5LTOS6T3B3.bip&sbest=vurl.pps.tv&tip=0&tracker=118.194.167.14,118.194.167.12&video_id=190884437
+
+高清版:
+http://vurl.ppstv.com/ugc/c/44/c2fcb295788f0e7beb891497542b1c49b90bb15e/c2fcb295788f0e7beb891497542b1c49b90bb15e.pfv
+普通版:
+http://vurl.pps.tv/ugc/3/19/389f5dc1c9552c29ec78b9ba559058b6023053b5/389f5dc1c9552c29ec78b9ba559058b6023053b5.pfv
+
+
+我计算出来的流畅版:
+http://hurl.ppstv.com/ugc/9/76/934c69862dd3709ae2f6950c5782cb7c839a3d4f/934c69862dd3709ae2f6950c5782cb7c839a3d4f.mp4?sign=he1de0562c539decc138359425726bb3996502cc6db
+看吧, 得到的地址差别很大, 说明我的算法是有问题的.
+
+
+221.204.10.14/ugc/c/44/c2fcb295788f0e7beb891497542b1c49b90bb15e/c2fcb295788f0e7beb891497542b1c49b90bb15e.pfv?start=4177686
+
+
+http://dp.ppstv.com/get_play_url_cdn.php?sid=37GFKV&flash_type=1&type=1&region=%E6%B2%B3%E5%8D%97&operator=%E8%81%94%E9%80%9A
+这里: type=0或者type=2代表标清版; type=1代表高清版; type=3 代表流畅版. 如果不给定type的值, 或者type的值不是1或者3, 那它就会默认的值, 2, 就会是标清版.
+http://dp.ppstv.com/get_play_url_cdn.php?sid=37GFKV&flash_type=1&type=4
+http://dp.ppstv.com/get_play_url_cdn.php?sid=37GFKV&flash_type=1&type=4
+
+http://v.pps.tv/dp.ppstv.com/get_play_url_cdn.php?sid=37GFKV&flash_type=1&type=1
+
+
+http://dp.ppstv.com/get_play_url_cdn.php?sid=37GFKV&flash_type=1&type=3
+http://dp.ppstv.com/get_play_url_cdn.php?sid=37GFKV&flash_type=1&type=3

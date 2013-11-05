@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        ppsHTML5
-// @version     1.3
-// @include     http://*.pps.tv/*
+// @version     1.4
 // @include     http://v.pps.tv/play_*
+// @include     http://ipd.pps.tv/play_*
 // @description Play Videos with html5 on pps.com
 // @author      LiuLang
 // @email       gsushzhsosgsu@gmail.com
@@ -12,6 +12,8 @@
 // ==/UserScript==
 
 /**
+ * v1.4 - 2013.11.5
+ * update algorithm.
  * v1.3 - 2013.7.26
  * Show all images.
  * v1.2 - 2013.7.26
@@ -28,18 +30,23 @@ var uw = unsafeWindow,
     error = uw.console.error;
 
 var pps = {
-  video_id: '',
-  url_key: '',
+  vid: '',
   title: '',
-
-  videoUrl: {
-    p0: '', // 标清
-    p1: '', // 高清
-    //p2: '',
-    p3: '', // 超清
+  types: {
+    1: '高清',
+    2: '标清',
+    3: '流畅',
   },
+  videoUrl: {
+    1: '',
+    2: '',
+    3: '',
+  },
+  jobs: 3,
+  fromIqiyi: false,
 
   run: function() {
+    log('run()');
     this.showImages();
     this.router();
   },
@@ -62,78 +69,69 @@ var pps = {
 
   router: function() {
     log('router() --');
-    if (uw.location.href.search('v.pps.tv/play_') !== -1) {
+    if (uw.location.href.search('pps.tv/play_') !== -1) {
       this.getId();
-      this.getVideoJSON();
     } else {
-      error('Do nothing.');
+      error('Failed to get vid!');
     }
   },
 
   getId: function() {
     log('getId() -- ');
-    var scripts = uw.document.querySelectorAll('head script'),
-        script,
-        i;
-
-    for (i = 0; script = scripts[i]; i += 1) {
-      if (script.hasAttribute('src') === false) {
-        log('script: ', script);
-        break;
-      }
+    var vidReg = /play_([\s\S]+)\.html/,
+        vidMatch = vidReg.exec(uw.document.location.href),
+        titleReg = /([\s\S]+)-在线观看/,
+        titleMatch = titleReg.exec(uw.document.title);
+    if (vidMatch) {
+      this.vid = vidMatch[1];
     }
-
-    if (uw.video === undefined) {
-      uw.eval(script.innerHTML);
+    if (titleMatch) {
+      this.title = titleMatch[1];
     }
-    log('uw: ', uw);
-    this.url_key = uw.video.url_key;
-    this.video_id = uw.video.video_id;
-
-    //this.title = uw.document.title.split('-')[0];
-    this.title = uw.video.new_title;
-
     log('this: ', this);
+    if (this.vid.length > 0) {
+      this.getUrl(1); // 高清
+      this.getUrl(2); // 标清
+      this.getUrl(3); // 流畅
+    }
   },
 
-  getVideoJSON: function() {
-    log('getVideoJSON() --');
-    var pref = 'http://dp.ugc.pps.tv/get_play_url_html.php?',
-        that = this,
-        url = '';
+  getUrl: function(type) {
+    log('getUrl()');
+    var url = [
+      'http://dp.ppstv.com/get_play_url_cdn.php?sid=',
+      this.vid,
+      '&flash_type=1&type=',
+      type,
+      ].join(''),
+      that = this;
 
-    url = [
-      pref,
-      'video_id=', this.video_id,
-      '&url_key=', this.url_key,
-      ].join('');
-
-    log('url: ', url);
     GM_xmlhttpRequest({
       method: 'GET',
       url: url,
       onload: function(response) {
-        log('response: ', response);
+        log(response);
+        var txt = response.responseText;
 
-        var txt = response.responseText,
-            json = JSON.parse(txt),
-            t,
-            i;
-        log('json: ', json);
-        for (i = 0; t = json[i]; i += 1) {
-          that.videoUrl['p' + t.type] = t.path;
+        if (txt.search('api.ipd.pps.tv/iqiyi/') > -1) {
+          error('From iqiyi, not supported!');
+          that.fromIqiyi = true;
+          that.createUI();
+          return false;
         }
-        log('that: ', that);
-
-        that.createUI();
+        that.videoUrl[type] = txt.substr(0, txt.search('.pfv?') + 4);
+        that.jobs -= 1;
+        if (that.jobs === 0) {
+          that.createUI();
+        }
       },
     });
   },
 
   createUI: function() {
     log('createUI() --');
+    log(this);
     var div = uw.document.createElement('div'),
-        labels = {p0: '(标清)', p1: '(高清)', p3: '(流畅)'},
         p,
         a;
 
@@ -160,20 +158,26 @@ var pps = {
           'outline: none; ',
           '}',
         ].join(''));
+    div.className = 'download-wrap';
+    uw.document.body.appendChild(div);
 
-    for (p in this.videoUrl) {
-      if (this[p] === '') {
+    if (this.fromIqiyi) {
+      a = uw.document.createElement('p');
+      a.innerHTML = 'This video comes from iqiyi!';
+      div.appendChild(a);
+      return;
+    }
+
+    for (type in this.videoUrl) {
+      if (this.videoUrl[type] === '') {
         continue;
       }
       a = uw.document.createElement('a');
-      a.href = this.videoUrl[p];
-      a.innerHTML = this.title + labels[p];
+      a.href = this.videoUrl[type];
+      a.innerHTML = this.title + '-' + this.types[type];
       a.className = 'download-link';
       div.appendChild(a);
     }
-
-    div.className = 'download-wrap';
-    uw.document.body.appendChild(div);
   },
 
   /**
