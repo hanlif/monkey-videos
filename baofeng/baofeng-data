@@ -1,0 +1,37 @@
+http://e.hd.baofeng.com/play/16/play-97016.html
+这个是信息介绍:
+http://e.hd.baofeng.com/detail/16/detail-97016.html
+可以加入一些格式, 比如720P的:
+http://e.hd.baofeng.com/play/16/play-97016.html?format=720P
+
+这个可以抓取视频的详细信息, 里面包括名称, vid, cid等.
+http://minfo.baofeng.net/asp_c/13/476/13476-n-60-r-50-s-0-p-1.json?
+
+现在, 就需要得到这个40位的sha1值.
+向这个地方发送请求, 就可以得到视频地址, 后面的t参数没用.
+http://fldispatch.fl.baofeng.net/B36BB6D856CB1C34C35E9F53DDC119F7FEF0984C.mp4?t=0.41050054505467415
+
+这个http请求里包含了最终的下载地址:
+ 61.55.172.198,61.164.210.53 80 /B3/4C/ FE39AF77795FB3B95F5AE801D2653006 
+61.55.172.198:80//B3/4C/FE39AF77795FB3B95F5AE801D2653006
+
+这个是最终的视频下载地址:
+61.55.172.198/B3/4C/B36BB6D856CB1C34C35E9F53DDC119F7FEF0984C.flv?key=E392D6B789AA2408F994FBAA0F24B551
+
+
+http://b3.ploy.baofeng.net/m/97016?from=hdbf&g=1
+
+aid	"36987"
+movieid	"215848"
+wid	"13"
+
+查到了:
+http://storm.baofeng.net/?c=storm://1310000118009||channel
+这里面是:
+StormBox://tasktype=P2PVOD|lid=|aid=13476|vid=118009|wid=13|clarity=480P|wurl=|caption=0|charge=0|vtype=swf|vname=机器人9号_01 (480P)|wname=暴高清|pid=|channel=|cid=B36BB6D856CB1C34C35E9F53DDC119F7FEF0984C|swf={"movieid": "97016", "sort": "101", "iid": "qstp://qkvp/pGp/bmxleqg/qey:XDXZ.s?jp=GGJ&jd=BJTBBT1XQTCBDCJMCJQEZFQJ11CDDZFWFEFAZXMC&vd=WQCZ1C0CATEEQXAFGJCEFG1DQMQXAMX0FGWECAJZ&lh=XJX0XDG&fz=DGWFDX&pi=DT&pr=WTQ1A&pps=A&ppk=A&pyp=XJX0WFC&blzd=MZBG&pah=MTTEBAXMATFTCTFMJEFWBQGGZGECQJJQ&ped=pov", "ad": "G001"}|mark=0000|ctp=0|token=00107000p
+它的上游是:
+http://minfo.baofeng.net/asp_c/13/476/13476-n-60-r-50-s-0-p-1.json?_random=false&t=1383259707&callback=_callbacks_.PageInfo1383389274906
+这个13476可以在文中找到, 118009也有.
+
+minfo.baofeng.net/asp_c/13/476/13476.json
+minfo.baofeng.net/asp_c/13/476/65440.json
