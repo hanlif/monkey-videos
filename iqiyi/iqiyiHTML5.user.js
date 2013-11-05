@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          iqiyiHTML5
-// @version       1.1
+// @version       1.3
 // @description   play video with html5 in iqiyi.com
 // @include       http://*.iqiyi.com/*
 // @grant         GM_xmlhttpRequest
@@ -9,6 +9,8 @@
 
 
 /**
+ * v1.3 - 2013.11.5
+ * algorithm updated.
  * v1.2 - 2013.8.3
  * Create UI
  * v1.1 - 2013.7.31
@@ -26,191 +28,175 @@ var uw = unsafeWindow,
 
 var iqiyi = {
   title: '',
-  key: 0,
-  tvid: 0,
-  videoid: 0,
-  cacheJson: [],
-  durations: {1: '流畅', 2: '高清', 3: '超清', 5: '1080P', 96: '极速'},
-  videosLinks: {},
-  videoLinksCount: 0,
+  vid: '', // default vid
+  type: 0, // default type
+  rc: {
+    96: {
+      vid: '',
+      key: '',
+      name: '极速',
+      links: [],
+    },
+    1: {
+      vid: '',
+      key: '',
+      name: '流畅',
+      links: [],
+    },
+    2: {
+      vid: '',
+      key: '',
+      name: '高清',
+      links: [],
+    },
+    3: {
+      vid: '',
+      key: '',
+      name: '超清',
+      links: [],
+    },
+    5: {
+      vid: '',
+      key: '',
+      name: '1080P',
+      links: [],
+    },
+  },
+  jobs: 0,
 
   run: function() {
-    this.getKey();
+    log('run()');
     this.getTitle();
-    this.getId();
-    if (this.tvid !== 0 && this.videoid !== 0) {
+    this.getVid();
+    if (this.vid !== '') {
+      this.getVideoUrls(this.vid);
       this.createPanel();
-      this.getVideoCache();
     } else {
       error('No video to download!');
+      return false;
     }
-  },
-
-  /**
-   * Get Magic Number, and save it as this.key.
-   */
-  getKey: function() {
-    log('getKey() --');
-    var that = this;
-
-    GM_xmlhttpRequest({
-      method: 'get',
-      url: 'http://data.video.qiyi.com/t',
-      onload: function(response) {
-        log('response:', response);
-        var magicNumber = 2519219136,
-            json = JSON.parse(response.responseText),
-            t = json['t'];
-        //that.key = that.LongXOR(magicNumber, parseInt(json['t']));
-        //that.key = (t ^ (-1775748160)) + Math.pow(2, 32);
-        that.key = window.Q.crypt.md5(t ^ 2391462251);
-        that.key = t;
-        log('magic key:', that.key);
-      },
-    });
-  },
-
-  /**
-   * Check this.key is set.
-   */
-  checkKey: function() {
-    log('checkKey() --');
-    if (this.key === 0) {
-      return true;
-      //return false;
-    }
-    return true;
   },
 
   getTitle: function() {
     log('getTitle() --');
-    var nav = uw.document.querySelector('#navbar'),
+    var nav = uw.document.querySelector('#navbar em'),
         id,
         title;
 
     if (nav) {
-      id = nav.querySelector('span').innerHTML;
-      title = nav.querySelector('em').innerHTML;
-      this.title = id + title;
+      title = nav.innerHTML;
     } else {
-      this.title = uw.document.title.split('-')[0];
+      title = uw.document.title.split('-')[0];
     }
-    this.title = this.title.trim();
+    this.title = title.trim();
   },
 
-  getId: function() {
-    log('getId() --');
-    var flashbox = uw.document.querySelector('#flashbox');
-    if (flashbox === null) {
-      return false;
+  getVid: function() {
+    log('getVid() --');
+    var videoPlay = uw.document.querySelector('div.videoPlay div');
+    if (videoPlay && videoPlay.hasAttribute('data-player-videoid')) {
+      this.vid = videoPlay.getAttribute('data-player-videoid');
     }
-    this.tvid = flashbox.getAttribute('data-player-tvid');
-    this.videoid = flashbox.getAttribute('data-player-videoid');
   },
 
-  getVideoCache: function() {
-    log('getVideoCache() --');
-    var url = [
-          'http://cache.video.qiyi.com/vd/',
-          this.tvid,
-          '/',
-          this.videoid,
-          '/',
-        ].join(''),
+  getVideoUrls: function(vid) {
+    log('getVideoUrls()', vid);
+    var url = 'http://cache.video.qiyi.com/v/' + vid
         that = this;
 
-    log('url: ', url);
     GM_xmlhttpRequest({
-      method: 'get',
+      method: 'GET',
       url: url,
       onload: function(response) {
-        log('response: ', response);
-        that.cacheJson = JSON.parse(response.responseText);
-        that.whenReady(that.checkKey, that.getVideoLinks, 100);
+        var xml = that.parseXML(response.responseText),
+            title,
+            vid_elemes,
+            vid_elem,
+            type,
+            container,
+            i,
+            j,
+            files,
+            file;
+
+        if (that.title === '') {
+          title = xml.querySelector('title').innerHTML;
+          that.title = title.substring(9, title.length - 3);
+        }
+
+        vid_elems = xml.querySelectorAll('relative data');
+        if (that.jobs === 0) {
+          that.jobs = vid_elems.length;
+          log('that.job is: ', that.jobs, that, url);
+        }
+        for (i = 0; vid_elem = vid_elems[i]; i += 1) {
+          type = vid_elem.getAttribute('version');
+          container = that.rc[type];
+          if (container.vid.length === 0) {
+            container.vid = vid_elem.innerHTML;
+            if (container.vid != vid && that.vid === vid) {
+              that.getVideoUrls(container.vid);
+            }
+            if (vid === that.vid) {
+              that.type = type;
+            }
+          }
+          if (container.vid === vid) {
+            files = xml.querySelectorAll('fileUrl file');
+            for (j = 0; file = files[j]; j += 1) {
+              container.links.push(file.innerHTML);
+            }
+            that.getKey(container);
+          }
+        }
       },
     });
   },
 
-  /**
-   * Get all available videos parallely.
-   */
-  getVideoLinks: function() {
-    log('getVideoLinks() --');
-    log('this: ', this);
-    var i,
-        j,
-        v,
-        f,
-        url,
-        vs = this.cacheJson.tkl[0].vs;
-    for (i = 0; v = vs[i]; i += 1) {
-      for (j = 0; f = v.fs[j]; j += 1) {
-        this.videoLinksCount += 1;
-        url = 'http://data.video.qiyi.com/' + this.key + f.l;
-        log('url: ', url);
-        GM_xmlhttpRequest({
-          method: 'get',
-          url: url,
-          onload: (function(i, j, that) {
-            return function(response) {
-              log('response: ', response);
-              log('i: ', i);
-              log('j: ', j);
-              log('that: ', that);
-              var json = JSON.parse(response.responseText);
-              that.appendVideoLinks(i, j, json);
-            };
-          })(i, j, this),
-        });
-      }
-    }
-  },
+  getKey: function(container) {
+    log('getKey()', container);
+    var hash = container.links[0].split('/'),
+        url = [
+          'http://data.video.qiyi.com/',
+          hash[hash.length - 1].substr(0, 32),
+          '.ts',
+        ].join(''),
+        that = this;
 
-  /**
-   * Save video links to this.
-   * When all videos received, call createUI().
-   */
-  appendVideoLinks: function(i, j, json) {
-    log('appendVideoLinks() --');
-    this.cacheJson.tkl[0].vs[i].fs[j].json = json;
-    this.videoLinksCount -= 1;
-    if (this.videoLinksCount === 0) {
-      log('All video links received.');
-      this.createUI();
-    }
+    log('getKey: ', url);
+    GM_xmlhttpRequest({
+      method: 'GET',
+      url: url,
+      onload: function(response) {
+        var finalUrl = response.finalUrl;
+
+        log(response, response.finalUrl);
+        container.key = finalUrl.substr(finalUrl.search('key='));
+        that.jobs -= 1;
+        log('jobs: ', that.jobs, that);
+        if (that.jobs === 0) {
+          that.createUI();
+        }
+      },
+      onerror: function(response) {
+        log('onerror:', response);
+      },
+    });
   },
 
   createUI: function() {
     log('createUI() --');
-    var vs = this.cacheJson.tkl[0].vs,
-        i,
-        j,
-        v,
-        videos,
-        f;
-    for (i = 0; v = vs[i]; i += 1) {
-      this.videosLinks[v.bid] = [];
-      for (j = 0; f = v.fs[j]; j += 1) {
-        this.videosLinks[v.bid].push(this.rebuildVideoLink(f.json.l));
+    var type;
+
+    for (type in this.rc) {
+      if (this.rc[type].key.length > 0) {
+        this.appendPlaylist(type);
       }
-      this.appendPlaylist(v.bid);
     }
-    log('this: ', this);
-    this.modifyPlaylist(96);
+    uw.document.getElementById('choose-format-' + this.type).checked = true;
+    this.modifyPlaylist(this.type);
   },
 
-  rebuildVideoLink: function(url) {
-    log('rebuildVideoLink() --');
-    var urlReg = /(http:\/\/[^\/]+)\//,
-        urlMatch = urlReg.exec(url);
-
-    if (urlMatch && urlMatch.length == 2) {
-      return urlMatch[1] + '/videos2/' + url.replace(urlReg, '');
-    } else {
-      error('Failed to rebuild video link!');
-    }
-  },
-  
   createPanel: function() {
     log('createPanel() --');
     var panel = uw.document.createElement('div');
@@ -255,7 +241,7 @@ var iqiyi = {
     panel.className = 'iqiyi-panel';
   },
 
-  appendPlaylist: function(format) {
+  appendPlaylist: function(type) {
     log('appendPlaylist() --');
     var label = uw.document.createElement('label'),
         input = uw.document.createElement('input'),
@@ -264,41 +250,42 @@ var iqiyi = {
         that = this,
         id;
 
-    id = 'choose-format-' + format;
+    id = 'choose-format-' + type;
     label.className = 'iqiyi-label';
     label.setAttribute('for', id);
     input.id = id;
     input.type = 'radio';
-    input.setAttribute('data-format', format);
+    input.setAttribute('data-type', type);
     input.name = 'iqiyi-format-choice';
-    span.innerHTML = this.durations[format];
+    span.innerHTML = this.rc[type]['name'];
 
     label.appendChild(input);
     label.appendChild(span);
     form.appendChild(label);
 
     input.addEventListener('change', function() {
-      that.modifyPlaylist(format);
+      that.modifyPlaylist(type);
     }, false);
   },
 
-  modifyPlaylist: function(format) {
-    log('modifyPlaylist() --');
+  modifyPlaylist: function(type) {
+    log('modifyPlaylist() --', type);
     var playlist = uw.document.querySelector('#iqiyi-playlist'),
         title,
         url,
+        container = this.rc[type],
         a,
         i;
 
     // 清空列表:
     playlist.innerHTML = '';
 
-    for (i = 0; url = this.videosLinks[format][i]; i += 1) {
+    for (i = 0; url = container.links[i]; i += 1) {
       a = uw.document.createElement('a');
-      a.href = url;
+      a.href = [url,'?', container.key].join('');
       a.className = 'iqiyi-video-items';
-      title = this.title + '-' + this.durations[format];
-      if (i < 9) {
+      title = this.title + '-' + container.name;
+      if (container.links.length > 9 && i < 9) {
         title = title + '-(0' + String(i + 1) + ')';
       } else {
         title = title + '-(' + String(i + 1) + ')';
@@ -338,41 +325,22 @@ var iqiyi = {
   },
 
   /**
-   * XOR operator ^ in ECMA-Script5 only works for 32-bit integers,
-   * this function supports XOR without bit-length limitatioin, 
-   * like in Python.
+   * Convert string to xml
+   * @param string str
+   *  - the string to be converted.
+   * @return object xml
+   *  - the converted xml object.
    */
-
-  LongXOR: function(a, b) {
-    log('LongXOR() --');
-    // XOR operation need non-negative integer.
-    if (a < 0 || b < 0) {
-      return false;
-    }
-    if (a === b) {
-      return 0;
-    }
-
-    var arrA = a.toString(2).split('').reverse(),
-        arrB = b.toString(2).split('').reverse(),
-        result = [],
-        i;
-
-    if (a > b) {
-      for (i = 0; i < arrB.length; i += 1) {
-        result.push(arrA[i] ^ arrB[i]);
-      }
-      result = result.concat(arrA.slice(i)).reverse();
-      return parseInt(result.join(''), 2);
+  parseXML: function(str) {
+    if (uw.document.implementation &&
+        uw.document.implementation.createDocument) {
+      xmlDoc = new DOMParser().parseFromString(str, 'text/xml');
     } else {
-      return LongXOR(b, a);
+      log('parseXML() error: not support current web browser!');
+      return null;
     }
+    return xmlDoc;
   },
 };
-
-uw.setTimeout(function() {
-  log('test log');
-  error('test error');
-}, 1000);
 
 iqiyi.run();
