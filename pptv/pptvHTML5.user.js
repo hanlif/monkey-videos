@@ -148,7 +148,13 @@ var pptv = {
     for (i = 0; i < this.sgm; i += 1) {
       a = document.createElement('a');
       div.appendChild(a);
-      a.innerHTML = String(i) + ') ' + this.title;
+      if (this.sgm.length === 1) {
+        a.innerHTML = this.title;
+      } else if (this.sgm.length > 9 && i < 9) {
+        a.innerHTML = this.title + '-(0' + i + ')';
+      } else {
+        a.innerHTML = this.title +  '-(' + i + ')';
+      }
       a.href = this.playlist[i];
       a.className = 'download-link';
     }
