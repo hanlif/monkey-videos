@@ -2,7 +2,7 @@
 // @name         neteaseHTML5
 // @description  Play Videos with html5 on 163.com
 // @include      http://v.163.com/*
-// @version      1.1
+// @version      1.2
 // @license      GPLv3
 // @author       LiuLang
 // @email        gsushzhsosgsu@gmail.com
@@ -11,6 +11,10 @@
 // ==/UserScript==
 
 /**
+ * v1.2 - 2013.11.7
+ * Add another way to get videos for open course
+ * Can download srt files
+ * Add margins betten video items.
  * v1.1 - 2013.11.7
  * Fixed: get videos from m3u8 list.
  * v1.0 - 2013.10.31
@@ -22,29 +26,77 @@ var uw = unsafeWindow,
     error = uw.console.error;
 
 var netease = {
-  /* store video formats and its urls **/
-  formats: {
+  videos: {
+    SD: '',
+    HD: '',
+    SHD: '',
   },
-  /* video title **/
+  types: {
+    SD: '标清',
+    HD: '高清',
+    SHD: '超清',
+  },
   title: '',
-  /* video source url */
-  videoUrl: '',
+  subs: {
+  },
 
-  /**
-   * Program starter
-   */
   run: function() {
+    var type;
+
     this.getTitle();
-    this.getSource();
-    if (this.videoUrl.length === 0) {
-      error('Failed to get video source!');
-      return false;
+    if (uw.document.title.search('网易公开课') > -1) {
+      this.getOpenCourseSource();
+    } else {
+      this.getSource();
     }
-    this.createUI();
   },
 
   getTitle: function() {
     this.title = uw.document.title;
+  },
+
+  getOpenCourseSource: function() {
+    log('getOpenCourseSource()')
+    var url = uw.document.location.href.split('/'),
+        length = url.length,
+        xmlUrl,
+        that = this;
+
+    xmlUrl = [
+      'http://live.ws.126.net/movie',
+      url[length - 3],
+      url[length - 2],
+      '2_' + url[length - 1].replace('html', 'xml'),
+      ].join('/');
+    log('xmlUrl: ', xmlUrl);
+    GM_xmlhttpRequest({
+      method: 'GET',
+      url: xmlUrl,
+      onload: function(response) {
+        log(response);
+        var xml = that.parseXML(response.responseText),
+            type,
+            video,
+            subs,
+            sub,
+            subName,
+            i;
+
+        that.title = xml.querySelector('all title').innerHTML;
+        for (type in that.videos) {
+          video = xml.querySelector('playurl_origin ' + type +' mp4');
+          if (video) {
+            that.videos[type] = video.innerHTML;
+          }
+        }
+        subs = xml.querySelectorAll('subs sub');
+        for (i = 0; sub = subs[i]; i += 1) {
+          subName = sub.querySelector('name').innerHTML + '字幕';
+          that.subs[subName] = sub.querySelector('url').innerHTML;
+        }
+        that.createUI();
+      },
+    });
   },
 
   getSource: function() {
@@ -60,35 +112,27 @@ var netease = {
       match = reg.exec(script.innerHTML);
       log(match);
       if (match && match.length > 1) {
-        this.videoUrl = match[1].replace('-mobile.mp4', '.flv');
+        this.videos.SD = match[1].replace('-mobile.mp4', '.flv');
+        this.createUI();
         return true;
       }
       m3u8Match = m3u8Reg.exec(script.innerHTML);
       log(m3u8Match);
       if (m3u8Match && m3u8Match.length > 1) {
-        this.videoUrl = m3u8Match[1].replace('-list', '') + '.mp4';
+        this.videos.SD = m3u8Match[1].replace('-list', '') + '.mp4';
+        this.createUI();
         return true;
       }
     }
   },
 
-
-  /**
-   * Create User interface.
-   *
-   * This function is called in decodeURL().
-   */
   createUI: function() {
     log('createUI() --');
-    // 检查可用的视频格式;
-    this.createPanel();
-  },
+    log(this);
 
-  /**
-   * Create the control panel.
-   */
-  createPanel: function() {
     var panel = uw.document.createElement('div'),
+        type,
+        subName,
         a;
 
     this.addStyle([
@@ -105,6 +149,7 @@ var netease = {
           '}',
         '.download-link { ',
           'display: block;',
+          'margin: 8px;',
           '}',
         '.download-link:hover { ',
           'text-decoration: underline; ',
@@ -115,11 +160,27 @@ var netease = {
           '}',
         ].join(''));
 
-    a = uw.document.createElement('a');
-    a.href = this.videoUrl;
-    a.innerHTML = this.title;
-    a.className = 'download-link';
-    panel.appendChild(a);
+    for (type in this.videos) {
+      if (this.videos[type] === '') {
+        continue;
+      }
+      a = uw.document.createElement('a');
+      a.href = this.videos[type];
+      a.innerHTML = this.title + '-' + this.types[type];
+      a.className = 'download-link';
+      panel.appendChild(a);
+    }
+
+    for (subName in this.subs) {
+      if (this.subs[subName] === '') {
+        continue;
+      }
+      a = uw.document.createElement('a');
+      a.href = this.subs[subName];
+      a.innerHTML = this.title + '-' + subName;
+      a.className = 'download-link';
+      panel.appendChild(a);
+    }
 
     panel.className = 'download-wrap';
     uw.document.body.appendChild(panel);
@@ -136,6 +197,24 @@ var netease = {
       uw.document.head.appendChild(style);
       style.innerHTML = styleText;
     }
+  },
+
+  /**
+   * Convert string to xml
+   * @param string str
+   *  - the string to be converted.
+   * @return object xml
+   *  - the converted xml object.
+   */
+  parseXML: function(str) {
+    if (uw.document.implementation &&
+        uw.document.implementation.createDocument) {
+      xmlDoc = new DOMParser().parseFromString(str, 'text/xml');
+    } else {
+      log('parseXML() error: not support current web browser!');
+      return null;
+    }
+    return xmlDoc;
   },
 
 };

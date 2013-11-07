@@ -1,0 +1,25 @@
+请求的URL:
+http://v.163.com/movie/2013/10/6/2/M9AHND6J3_M9AHUK462.html
+
+http://mov.bn.netease.com/open-movie/nos/mp4/2013/10/18/S9AHUIMDQ_shd.mp4
+
+字幕:
+http://nos.netease.com/oc-caption-srt/oc-srt-1383791035069.srt
+http://nos.netease.com/oc-caption-srt/oc-srt-1383791038410.srt
+
+这个xml文件里, 包含了所有格式的视频的地址, 视频分三种格式, SD, HD, SHD. 并且, 里面还存放着字幕文件的地址.
+http://live.ws.126.net/movie/6/2/2_M9AHND6J3_M9AHUK462.xml
+
+
+
+第二次测试:
+http://v.163.com/movie/2013/11/9/K/M9C2UUOO0_M9C2V2M9K.html
+
+http://live.ws.126.net/movie/9/K/2_M9C2UUOO0_M9C2V2M9K.xml
+
+
+第三次, 猜测:
+http://v.163.com/movie/2013/10/L/7/M9AI0SILF_M9BM25VL7.html
+http://live.ws.126.net/movie/L/7/2_M9AI0SILF_M9BM25VL7.xml
+
+这里: M9AI0SILF是playerid, M9BM25VL7是movieid.
