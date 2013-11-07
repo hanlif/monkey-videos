@@ -87,6 +87,12 @@ var netease = {
           video = xml.querySelector('playurl_origin ' + type +' mp4');
           if (video) {
             that.videos[type] = video.innerHTML;
+            continue;
+          }
+          video = xml.querySelector(
+            'playurl_origin ' + type.toUpperCase() +' mp4');
+          if (video) {
+            that.videos[type] = video.innerHTML;
           }
         }
         subs = xml.querySelectorAll('subs sub');
