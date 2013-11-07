@@ -82,7 +82,8 @@ var netease = {
             subName,
             i;
 
-        that.title = xml.querySelector('all title').innerHTML;
+        //that.title = xml.querySelector('all title').innerHTML;
+        that.title = uw.document.title.replace('_网易公开课', '');
         for (type in that.videos) {
           video = xml.querySelector('playurl_origin ' + type +' mp4');
           if (video) {
