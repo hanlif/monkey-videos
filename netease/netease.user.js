@@ -27,14 +27,14 @@ var uw = unsafeWindow,
 
 var netease = {
   videos: {
-    SD: '',
-    HD: '',
-    SHD: '',
+    sd: '',
+    hd: '',
+    shd: '',
   },
   types: {
-    SD: '标清',
-    HD: '高清',
-    SHD: '超清',
+    sd: '标清',
+    hd: '高清',
+    shd: '超清',
   },
   title: '',
   subs: {
@@ -112,14 +112,14 @@ var netease = {
       match = reg.exec(script.innerHTML);
       log(match);
       if (match && match.length > 1) {
-        this.videos.SD = match[1].replace('-mobile.mp4', '.flv');
+        this.videos.sd = match[1].replace('-mobile.mp4', '.flv');
         this.createUI();
         return true;
       }
       m3u8Match = m3u8Reg.exec(script.innerHTML);
       log(m3u8Match);
       if (m3u8Match && m3u8Match.length > 1) {
-        this.videos.SD = m3u8Match[1].replace('-list', '') + '.mp4';
+        this.videos.sd = m3u8Match[1].replace('-list', '') + '.mp4';
         this.createUI();
         return true;
       }
