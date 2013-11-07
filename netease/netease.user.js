@@ -2,7 +2,7 @@
 // @name         neteaseHTML5
 // @description  Play Videos with html5 on 163.com
 // @include      http://v.163.com/*
-// @version      1.0
+// @version      1.1
 // @license      GPLv3
 // @author       LiuLang
 // @email        gsushzhsosgsu@gmail.com
@@ -11,6 +11,8 @@
 // ==/UserScript==
 
 /**
+ * v1.1 - 2013.11.7
+ * Fixed: get videos from m3u8 list.
  * v1.0 - 2013.10.31
  * project inited
  */
@@ -51,7 +53,7 @@ var netease = {
         script,
         reg = /<source[\s\S]+src="([^"]+)"/,
         match,
-        m3u8Reg = /appsrc\: '([\s\S]+)-list\.m3u8'/,
+        m3u8Reg = /appsrc\:\s*'([\s\S]+)\.m3u8'/,
         m3u8Match,
         i;
     for (i = 0; script = scripts[i]; i += 1) {
@@ -59,14 +61,12 @@ var netease = {
       log(match);
       if (match && match.length > 1) {
         this.videoUrl = match[1].replace('-mobile.mp4', '.flv');
-        log(this);
         return true;
       }
       m3u8Match = m3u8Reg.exec(script.innerHTML);
       log(m3u8Match);
       if (m3u8Match && m3u8Match.length > 1) {
-        this.videoUrl = m3u8Match[1] + '.mp4';
-        log(this);
+        this.videoUrl = m3u8Match[1].replace('-list', '') + '.mp4';
         return true;
       }
     }
