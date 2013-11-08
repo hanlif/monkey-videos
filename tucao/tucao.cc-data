@@ -1,0 +1,45 @@
+
+原始地址:
+http://www.tucao.cc/play/h4021653/
+
+来倒着查找:
+
+最终的视频地址:
+46.2M
+http://61.158.251.172/6/edge.v.iask.com/118522052.hlv?KID=sina,viask&Expires=1384012800&ssig=uIj25wPxmw
+46.2M
+http://61.158.251.171/edge.v.iask.com/118522052.hlv?KID=sina,viask&Expires=1384012800&ssig=uIj25wPxmw
+46.2M
+http://edge.v.iask.com/118522052.hlv?KID=sina,viask&Expires=1384012800&ssig=uIj25wPxmw
+
+获取视频地址的API, 得到的是一个XML文件. 这个视频是存放在sina的服务器上的, 并且在新浪视频也可以播放:
+http://www.tucao.cc/api/sina.php?vid=118519519
+这里的vid是..
+
+这个是获取用户tucao的:
+http://www.tucao.cc/index.php?m=mukio&c=index&a=init&playerID=11-4021653-1-0&r=828
+
+这个是获取tucao服务器地址, 包括广告地址:
+http://www.tucao.cc/conf.xml
+
+解析原始的网页:
+http://www.tucao.cc/play/h4021653/
+<ul id="player_code"></ul>
+这里面放着两个<li>, 它们的内容分别是vid和playerID. 前者用于获取视频地址, 后者用于获取用户tucao的信息.
+
+<li>type=sina&vid=118519519</li>这里, 可以看到, 是要用sina.php来得到视频地址.
+但要注意, 如果是一个集合(专辑)的话, 里面会放有好多数据, 比如这个地址:http://www.tucao.cc/play/h4021435/. 不同集之间以**作为分隔符. 并且, 还有每一集的标题, 以|分隔.
+如果是合集的话, 可以在URL中加入#5, 这会跳到第5集(从1开始计数).
+
+
+其它网站, 比如youku等的视频接口还没遇到过, 这个以后再加入.
+
+youku========
+原始地址:http://www.tucao.cc/play/h4018460/
+获取视频地址:
+http://www.tucao.cc/api/youku.php?id=XNjEwOTUwNzE2
+这个可以根据id构造出原始的youku的地址.
+
+tudou====
+与youku类似, 也可以构造出原始的url地址.
+http://www.tudou.com/programs/view/24JRFPvKiC4/

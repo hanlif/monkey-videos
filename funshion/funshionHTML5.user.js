@@ -398,8 +398,6 @@ var funshion = {
     div.insertBefore(parent, div.children[0]);
   },
 
-
-
   /**
    * Create a new <style> tag with str as its content.
    * @param string styleText
