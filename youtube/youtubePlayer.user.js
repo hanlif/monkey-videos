@@ -2,7 +2,8 @@
 // @name         youtubePlayer
 // @description  youtube Player
 // @include      *.c.youtube.com/*
-// @version		   1.1.1
+// @include      *.googlevideo.com/*
+// @version		   1.2
 // @license      GPLv3
 // @author       LiuLang
 // @email        gsushzhsosgsu@gmail.com
@@ -12,6 +13,8 @@
 
 /**
  * TODO: Add a player wrap.
+ * v1.2 - 2013.11.11
+ * Support googlevideo.com
  * v1.1.1 - 2013.5.11
  * Fix the scaleRatio bug.
  * v1.1 - 2013.5.11

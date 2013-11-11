@@ -113,6 +113,7 @@ var sohu = {
             i = 0;
 
         that[fmt].json = JSON.parse(txt);
+        log('that: ', that);
         //that.title = that[fmt].json.data.tvName;
         that[fmt].clipsURL = that[fmt].json.data.clipsURL;
         that[fmt].su = that[fmt].json.data.su;
@@ -122,7 +123,6 @@ var sohu = {
         that[fmt].ip = that[fmt].json.allot;
         that[fmt].reserveIp = that[fmt].json.reserveIp.split(';');
         that[fmt].done = true;
-        log('that: ', that);
 
         for (i in that[fmt].clipsURL) {
           url = [
