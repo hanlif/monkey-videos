@@ -285,7 +285,8 @@ var iqiyi = {
       a.href = [url,'?', container.key].join('');
       a.className = 'iqiyi-video-items';
       title = this.title + '-' + container.name;
-      if (container.links.length > 9 && i < 9) {
+      if (container.links.length === 1) {
+      } else if (container.links.length > 9 && i < 9) {
         title = title + '-(0' + String(i + 1) + ')';
       } else {
         title = title + '-(' + String(i + 1) + ')';
